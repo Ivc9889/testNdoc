@@ -1,0 +1,85 @@
+﻿    @model IEnumerable<Section>
+@{
+    ViewBag.Title = "Каталог компонентов";
+}
+<section class="section">
+    <div class="section__container container">
+        <div class="section__wrapper">
+            <div class="categories section__categories">
+
+
+                @foreach (var item in Model)
+                {
+                    <a onclick="GetDocuments(@item.Id)" class="category category--active section__category">
+                        <p class="category__text">
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </p>
+                    </a>
+                }
+
+            </div>
+        </div>
+        <div class="section__documents">
+            <div class="breadcrumbs">
+                <ul class="breadcrumbs__list">
+                    <li class="breadcrumbs__item">
+                        <a href="/">Главная</a>
+                    </li>
+                    <li class="breadcrumbs__item">
+                        <a href="#">Результаты поиска</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div id="section-tab" class="documents-content documents-content--active section__documents-content">
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts
+{
+<script>
+
+     $(document).ready(function() {
+          $(".category").on("click", function() {
+            let nameCategory = $(this).children().text().trim()
+            $(".breadcrumbs__item:last-child a").text(nameCategory)
+            //console.log($(".section__documents-title").text().trim())
+            //$(".section__documents-title").text(nameCategory)
+        })
+     })
+     function GetDocuments(id) {
+        $.ajax({
+            url: "Home/TableDocument",
+            method: "get",
+            data: { id: id },
+            success: function (data) {          
+                $("#section-tab").html(data);
+            }
+        })
+    }
+
+    function Search() {
+        let searchValue = document.querySelector(".search__input").value;
+            $.ajax({
+                url:"Home/Search",
+                method: "get",
+                data: { name: searchValue },
+                success: function (data) {
+                    $("#section-tab").html(data)
+                },
+                error: function(err) {
+                    console.log(err)
+                }
+
+            })
+        }
+
+
+
+
+</script>
+
+
+}
