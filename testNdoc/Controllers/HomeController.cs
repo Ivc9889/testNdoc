@@ -23,14 +23,17 @@ namespace testNdoc.Controllers
             db = new NDocContext();
             _logger = logger;
         }
-        public IActionResult TableDocument(int id)
+        public IActionResult TableDocument(int id, string categoryName)
         {
+            
             var model = db.Documents.Where(d => d.SectionId == id);
+            
             return PartialView(model);
         }
 
         public async Task<IActionResult> Index()
         {
+        
             return View(await db.Sections.Where(x => x.IsRemove != true).ToListAsync());
         }
 

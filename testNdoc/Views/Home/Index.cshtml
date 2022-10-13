@@ -4,20 +4,18 @@
 }
 <section class="section">
     <div class="section__container container">
-        <div class="section__wrapper">
-            <div class="categories section__categories">
-
-
+        <div class="section__categories">
+            <button class="section__categories-btn">Каталог документов</button>
+            <ul data-da=".popup-section .popup__inner, 768, last" class="categories section__categories-list">
                 @foreach (var item in Model)
                 {
-                    <a onclick="GetDocuments(@item.Id)" class="category category--active section__category">
+                    <li onclick="GetDocuments(@item.Id, event)" class="category section__categories-item">
                         <p class="category__text">
                             @Html.DisplayFor(modelItem => item.Name)
                         </p>
-                    </a>
+                    </li>
                 }
-
-            </div>
+            </ul>
         </div>
         <div class="section__documents">
             <div class="breadcrumbs">
@@ -26,12 +24,14 @@
                         <a href="/">Главная</a>
                     </li>
                     <li class="breadcrumbs__item">
-                        <a href="#">Результаты поиска</a>
+                        Результаты поиска
                     </li>
                 </ul>
             </div>
-
-            <div id="section-tab" class="documents-content documents-content--active section__documents-content">
+            <div class="documents-content documents-content--active section__documents-content">
+                <h2 class="section__documents-title">Последние документы</h2>
+                <ul class="section__documents-list">
+                </ul>
             </div>
         </div>
     </div>
@@ -44,18 +44,20 @@
      $(document).ready(function() {
           $(".category").on("click", function() {
             let nameCategory = $(this).children().text().trim()
-            $(".breadcrumbs__item:last-child a").text(nameCategory)
+            $(".breadcrumbs__item:last-child").text(nameCategory)
             //console.log($(".section__documents-title").text().trim())
             //$(".section__documents-title").text(nameCategory)
         })
      })
-     function GetDocuments(id) {
+     function GetDocuments(id, event) {
+        let nameCategory = event.target.querySelector('p').innerText.trim()
         $.ajax({
             url: "Home/TableDocument",
             method: "get",
-            data: { id: id },
-            success: function (data) {          
-                $("#section-tab").html(data);
+            data: { id: id, categoryName: nameCategory},
+            success: function (data) {
+                $(".section__documents-title").text(nameCategory)
+                $(".section__documents-list").html(data);
             }
         })
     }

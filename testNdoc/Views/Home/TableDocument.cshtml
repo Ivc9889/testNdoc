@@ -1,33 +1,12 @@
 ﻿@model IEnumerable<Documents>
 
-    
-<h2 class="section__documents-title">Последние документы</h2>
-<ul class="section__documents-list">
 
-
-    @*<li class="section__item section-item">
-        <a href="#" class="section-item__body">
-        @*<time class="section-item__time">16.09.2022</time>
-        @*             @foreach (var item in Model)
-        {
-        <p class="section-item__text"></p>
-        <a href="~/Files/@item.FileName" target="_blank">@item.Name</a>
-
-
-
-        }
+@foreach (var item in Model)
+{
+    <li class="section__documents-item section-item">
+        <a href="~/Files/@item.FileName" target="_blank" class="section-item__body">
+            <time class="section-item__time">@item.DateAdd</time>
+            <p class="section-item__text">@item.Name</p>
         </a>
-        </li>*@
-    @foreach (var item in Model)
-    {
-        <li class="section__documents-item section-item">
-            <a href="~/Files/@item.FileName"  target="_blank" class="section-item__body">
-                <p class="section-item__text">@item.Name</p>
-            </a>
-        </li>
-    }
-
-
-
-
-</ul>
+    </li>
+}

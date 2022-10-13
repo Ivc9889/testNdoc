@@ -50,7 +50,18 @@
             <p class="footer__company">ИВЦ, 2022</p>
         </div>
     </footer>
+
+    <div class="popup popup-section">
+        <div class="popup__area"></div>
+        <div class="popup__inner">
+            <button class="close-popup">
+                <img src="img/x.svg" alt="X">
+            </button>
+            
+        </div>
+    </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/dymanicAdaptive.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

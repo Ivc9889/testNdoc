@@ -28,6 +28,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\Files\" />
     <Folder Include="wwwroot\mediaUpload\" />
+    <Folder Include="Migration\" />
   </ItemGroup>
 
 </Project>
