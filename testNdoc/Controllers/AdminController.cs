@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace testNdoc.Controllers
 {
+    [Authorize]
     public class AdminController : Controller
     {
 
@@ -116,7 +118,7 @@ namespace testNdoc.Controllers
                     {
                         MyUploader.CopyTo(fileStream);
                     }
-                    Documents document = new Documents() { Name = Name, SectionId = SectionId, FileName = fileName };
+                    Documents document = new Documents() { Name = Name, SectionId = SectionId, FileName = fileName , DateAdd = DateTime.Now};
                     db.Add(document);
                     db.SaveChanges();
                     return new ObjectResult(new { status = "success" });
@@ -226,7 +228,7 @@ namespace testNdoc.Controllers
         [HttpPost]
         public ActionResult CreateDocument(Documents document)
         {
-
+            //document.DateAdd = DateTime.Now - Нужно менять в методе добав. файла;
             db.Documents.Add(document);
             db.SaveChanges();
             return RedirectToAction("Create");
@@ -262,11 +264,7 @@ namespace testNdoc.Controllers
             return View("Create");
         }
 
-        public IActionResult Indexes()
-        {
-            return View(@"C:\Users\UserHome\Downloads\BacPac-main\BacPac-main\testNdoc\Views\Home\Index.cshtml");
-        }
-
+       
 
 
         [HttpPost]

@@ -5,7 +5,7 @@
 {
     <li class="section__documents-item section-item">
         <a href="~/Files/@item.FileName" target="_blank" class="section-item__body">
-            <time class="section-item__time">@item.DateAdd</time>
+            <small class="section-item__time">@item.DateAdd?.ToString("dd.MM.yyyy")</small>
             <p class="section-item__text">@item.Name</p>
         </a>
     </li>

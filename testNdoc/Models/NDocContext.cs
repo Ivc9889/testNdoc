@@ -140,6 +140,10 @@ namespace testNdoc
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("id");
+                entity.Property(e => e.IsRemove)
+                    .HasColumnName("IsRemove");
+                entity.Property(e => e.DateAdd)
+                    .HasColumnName("DateAdd");
 
                 entity.Property(e => e.FileName)
                     .HasMaxLength(200)

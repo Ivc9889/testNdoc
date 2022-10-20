@@ -23,10 +23,10 @@ namespace testNdoc.Controllers
             db = new NDocContext();
             _logger = logger;
         }
-        public IActionResult TableDocument(int id, string categoryName)
+        public IActionResult TableDocument(int id)
         {
-            
-            var model = db.Documents.Where(d => d.SectionId == id);
+
+            var model = db.Documents.Where(d => d.SectionId == id).OrderByDescending(x => x.Id);
             
             return PartialView(model);
         }
@@ -41,8 +41,21 @@ namespace testNdoc.Controllers
         {
             if (!string.IsNullOrEmpty(name))
             {
-                var model = await db.Sections.Where(x => x.Name.Contains(name)).ToListAsync();
-                return  View(model);
+                try
+                {
+                    var model = await db.Documents.Where(x => x.Name.Contains(name)).ToListAsync();
+
+                    System.Diagnostics.Debug.WriteLine("Кол-во строк " + model.Count);
+                    return PartialView("TableDocument", model);
+
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
+                }
+
+
+
             }
             return NotFound();
 

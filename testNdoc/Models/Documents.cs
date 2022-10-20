@@ -17,6 +17,7 @@ namespace testNdoc
         public string Name { get; set; }
         public string FileName { get; set; }
         public bool? IsRemove { get; set; }
+        public DateTime? DateAdd { get; set; }  
 
         public virtual Section Section { get; set; }
     }

@@ -9,10 +9,10 @@
             <ul data-da=".popup-section .popup__inner, 768, last" class="categories section__categories-list">
                 @foreach (var item in Model)
                 {
-                    <li onclick="GetDocuments(@item.Id, event)" class="category section__categories-item">
-                        <p class="category__text">
-                            @Html.DisplayFor(modelItem => item.Name)
-                        </p>
+                    <li @*onclick="GetDocuments(@item.Id, event)"*@ data-id=@item.Id class="category section__categories-item">
+                       <p class="category__text">
+                          @Html.DisplayFor(modelItem => item.Name)
+                       </p>
                     </li>
                 }
             </ul>
@@ -42,21 +42,24 @@
 <script>
 
      $(document).ready(function() {
-          $(".category").on("click", function() {
-            let nameCategory = $(this).children().text().trim()
-            $(".breadcrumbs__item:last-child").text(nameCategory)
+          $(".category").on("click", function(e) {
+              let categoryId = +$(this).attr("data-id");
+              let categoryName =  $(this).children().text().trim();
+              GetDocuments(categoryId, categoryName)
+
             //console.log($(".section__documents-title").text().trim())
             //$(".section__documents-title").text(nameCategory)
         })
      })
-     function GetDocuments(id, event) {
-        let nameCategory = event.target.querySelector('p').innerText.trim()
+     function GetDocuments(id, categoryName, event) {
+        $(".breadcrumbs__item:last-child").text(categoryName)
+
         $.ajax({
             url: "Home/TableDocument",
             method: "get",
-            data: { id: id, categoryName: nameCategory},
+            data: { id: id, categoryName: categoryName},
             success: function (data) {
-                $(".section__documents-title").text(nameCategory)
+                $(".section__documents-title").text(categoryName)
                 $(".section__documents-list").html(data);
             }
         })
@@ -69,7 +72,7 @@
                 method: "get",
                 data: { name: searchValue },
                 success: function (data) {
-                    $("#section-tab").html(data)
+                    $(".section__documents-list").html(data);
                 },
                 error: function(err) {
                     console.log(err)
