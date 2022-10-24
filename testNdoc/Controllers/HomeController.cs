@@ -23,19 +23,36 @@ namespace testNdoc.Controllers
             db = new NDocContext();
             _logger = logger;
         }
-        public IActionResult TableDocument(int id)
-        {
-
-            var model = db.Documents.Where(d => d.SectionId == id).OrderByDescending(x => x.Id);
-            
-            return PartialView(model);
-        }
 
         public async Task<IActionResult> Index()
         {
-        
+
             return View(await db.Sections.Where(x => x.IsRemove != true).ToListAsync());
         }
+
+        public IActionResult TableDocument()
+        {
+
+            var model = db.Documents.ToList().Take(8).OrderByDescending(x => x.Id);
+            return PartialView(model);
+        }
+
+        public IActionResult TableDocument(int id)
+        {
+
+            var model = db.Documents.Where(d => d.SectionId == id).OrderByDescending(x => x.Id); 
+            return PartialView(model);
+        }
+        //public IActionResult TableDocument()
+        //{
+
+        //    var model = db.Documents.Take(8).ToList();
+
+        //    return PartialView(model);
+        //}
+
+       
+
 
         public async Task <IActionResult> Search(string name)
         {
@@ -45,16 +62,14 @@ namespace testNdoc.Controllers
                 {
                     var model = await db.Documents.Where(x => x.Name.Contains(name)).ToListAsync();
 
-                    System.Diagnostics.Debug.WriteLine("Кол-во строк " + model.Count);
+                    //Debug.WriteLine("Кол-во строк " + model.Count);
                     return PartialView("TableDocument", model);
 
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine(ex.Message);
+                   Debug.WriteLine(ex.Message);
                 }
-
-
 
             }
             return NotFound();

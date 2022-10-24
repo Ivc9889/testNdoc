@@ -16,13 +16,10 @@
         <tr>
             <td style="cursor:pointer;" onclick="GetDocuments(@item.Id)">
 
-
-
                 @*@Html.DisplayFor(modelItem => item.Name)*@
                 @*@Html.DisplayFor(modelItem => item.FileName)*@
                  <p class="section-item__text"></p>
-
-                
+               
                 <a href="~/Files/@item.FileName" target="_blank">@item.Name</a>
 
             </td>

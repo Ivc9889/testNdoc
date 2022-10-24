@@ -118,8 +118,7 @@
                 data: formData,
                 processData: false,
                 contentType: false,
-                beforeSend: function (xhr) {
-                    
+                beforeSend: function (xhr) {                    
                     xhr.setRequestHeader("XSRF-TOKEN",
                         $('input:hidden[name="__RequestVerificationToken"]').val());
                 },

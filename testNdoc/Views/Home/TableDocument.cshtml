@@ -1,12 +1,23 @@
-﻿@model IEnumerable<Documents>
+﻿@*@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    }*@
+
+@model IEnumerable<Documents>
 
 
-@foreach (var item in Model)
+@if (Model.Any())
 {
-    <li class="section__documents-item section-item">
-        <a href="~/Files/@item.FileName" target="_blank" class="section-item__body">
-            <small class="section-item__time">@item.DateAdd?.ToString("dd.MM.yyyy")</small>
-            <p class="section-item__text">@item.Name</p>
-        </a>
-    </li>
+    @foreach (var item in Model)
+    {
+        <li class="section__documents-item section-item">
+            <a href="~/Files/@item.FileName" target="_blank" class="section-item__body">
+                <small class="section-item__time">@item.DateAdd?.ToString("dd.MM.yyyy")</small>
+                <p class="section-item__text">@item.Name</p>
+            </a>
+        </li>
+    }
+}
+else
+{
+    <p>По вашему запросу ничего не найдено</p>
 }

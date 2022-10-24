@@ -9,7 +9,7 @@
             <ul data-da=".popup-section .popup__inner, 768, last" class="categories section__categories-list">
                 @foreach (var item in Model)
                 {
-                    <li @*onclick="GetDocuments(@item.Id, event)"*@ data-id=@item.Id class="category section__categories-item">
+                    <li asp-action="TableDocument" data-id=@item.Id class="category section__categories-item">
                        <p class="category__text">
                           @Html.DisplayFor(modelItem => item.Name)
                        </p>
@@ -44,16 +44,19 @@
      $(document).ready(function() {
           $(".category").on("click", function(e) {
               let categoryId = +$(this).attr("data-id");
-              let categoryName =  $(this).children().text().trim();
+              let categoryName = $(this).children().text().trim();
               GetDocuments(categoryId, categoryName)
 
             //console.log($(".section__documents-title").text().trim())
             //$(".section__documents-title").text(nameCategory)
         })
-     })
-     function GetDocuments(id, categoryName, event) {
-        $(".breadcrumbs__item:last-child").text(categoryName)
+        GetLastDocuments()
 
+        //$(".search__btn").on("click", Search())
+     })
+     function GetDocuments(id, categoryName) {
+        $(".breadcrumbs__item:last-child").text(categoryName)
+        $(".breadcrumbs").addClass("show");
         $.ajax({
             url: "Home/TableDocument",
             method: "get",
@@ -65,16 +68,30 @@
         })
     }
 
+    function GetLastDocuments() {
+        $.ajax({
+            url: "Home/TableDocument",
+            method: "get",
+            success: function (data) {
+                $(".section__documents-list").html(data);
+            }
+        })
+    }
+
     function Search() {
         let searchValue = document.querySelector(".search__input").value;
+        $(".breadcrumbs").addClass("show");
+        $(".breadcrumbs__item:last-child").text("Результаты поиска")
             $.ajax({
                 url:"Home/Search",
                 method: "get",
-                data: { name: searchValue },
+                data: { name: searchValue },               
                 success: function (data) {
+                    $(".section__documents-title").text(`Результаты поиска по запросу '${searchValue}'`)
                     $(".section__documents-list").html(data);
-                },
+                },               
                 error: function(err) {
+                    console.log("Ошибка поиска")
                     console.log(err)
                 }
 
