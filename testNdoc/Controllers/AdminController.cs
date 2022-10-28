@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace testNdoc.Controllers
+namespace testNdoc.Areas.AdminControllers
 {
     [Authorize]
     public class AdminController : Controller
@@ -33,7 +33,7 @@ namespace testNdoc.Controllers
             doc = new List<Documents>
             {
                 new Documents{Id=1,Name="фдлвдф"}
-            }; 
+            };
             list = new List<Section>
             {
                 new Section{Id=1,Name="фдлвдф"}
@@ -65,7 +65,7 @@ namespace testNdoc.Controllers
                 Section delete = await db.Sections.FirstOrDefaultAsync(p => p.Id == id);
                 if (delete != null)
                 {
-                    delete.IsRemove = true; 
+                    delete.IsRemove = true;
                     await db.SaveChangesAsync();
                     return RedirectToAction("Index");
                 }
@@ -118,7 +118,7 @@ namespace testNdoc.Controllers
                     {
                         MyUploader.CopyTo(fileStream);
                     }
-                    Documents document = new Documents() { Name = Name, SectionId = SectionId, FileName = fileName , DateAdd = DateTime.Now};
+                    Documents document = new Documents() { Name = Name, SectionId = SectionId, FileName = fileName, DateAdd = DateTime.Now };
                     db.Add(document);
                     db.SaveChanges();
                     return new ObjectResult(new { status = "success" });
@@ -136,10 +136,13 @@ namespace testNdoc.Controllers
 
         }
 
+        
+
 
         public IActionResult TableDocument(int id)
         {
-            var model = db.Documents.Where(d => d.SectionId == id);
+            ViewBag.SectionName = db.Sections.Find(id).Name;
+            var model = db.Documents.Where(x => x.IsRemove != true).Where(d => d.SectionId == id);
             return PartialView(model);
         }
 
@@ -213,6 +216,85 @@ namespace testNdoc.Controllers
             return PartialView();
         }
 
+        [HttpGet]
+        [ActionName("DeleteDocument")]
+        public async Task<IActionResult> ConfirmDeleteDocument(int? id)
+        {
+            if (id != null)
+            {
+                Documents delete = await db.Documents.FirstOrDefaultAsync(p => p.Id == id);
+                if (delete != null)
+                    return View(delete);
+            }
+            return NotFound();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteDocument(int? id)
+        {
+            if (id != null)
+            {
+                Documents delete = await db.Documents.FirstOrDefaultAsync(p => p.Id == id);
+                if (delete != null)
+                {
+                    delete.IsRemove = true;
+
+                    string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "Files");
+                    FileInfo fileInf = new FileInfo(Path.Combine(uploadsFolder, delete.FileName));
+                    if (fileInf.Exists)
+                    {
+                        fileInf.Delete();
+                    }
+
+                    await db.SaveChangesAsync();
+                    return RedirectToAction("Index");
+                }
+            }
+            return NotFound();
+        }
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> EditDocument(int? id)
+        {
+            if (id != null)
+            {
+                Documents name = await db.Documents.FirstOrDefaultAsync(p => p.Id == id);
+                if (name != null)
+                    return View(name);
+            }
+            return NotFound();
+        }
+
+        [HttpPost]
+        [RequestSizeLimit(808 * 1024 * 1024)]       //unit is bytes => 500Mb
+        [RequestFormLimits(MultipartBodyLengthLimit = 808 * 1024 * 1024)]
+        public IActionResult EditDocument(IFormFile MyUploader, string Name, int Id)
+        {
+            Documents updateDoc = db.Documents.Find(Id);
+            if (MyUploader != null)
+            {
+                string fileName = Guid.NewGuid() + Path.GetExtension(MyUploader.FileName);
+                string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "Files");
+                string filePath = Path.Combine(uploadsFolder, fileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    MyUploader.CopyTo(fileStream);
+                }
+
+                FileInfo fileInf = new FileInfo(Path.Combine(uploadsFolder, updateDoc.FileName));
+                if (fileInf.Exists)
+                {
+                    fileInf.Delete();
+                }
+                updateDoc.FileName = fileName;
+            }
+            updateDoc.Name = Name;
+            db.SaveChanges();
+            return RedirectToAction("Сreate", "Admin");
+        }
+
 
 
         public async Task<IActionResult> DocIndex()
@@ -255,7 +337,7 @@ namespace testNdoc.Controllers
 
         public async Task<ActionResult> Index()
         {
-            return View(await db.Sections.Where(x=>x.IsRemove!= true).ToListAsync());
+            return View(await db.Sections.Where(x => x.IsRemove != true).ToListAsync());
 
         }
 
@@ -264,7 +346,7 @@ namespace testNdoc.Controllers
             return View("Create");
         }
 
-       
+
 
 
         [HttpPost]
@@ -279,7 +361,7 @@ namespace testNdoc.Controllers
         [HttpGet]
         public ActionResult TableSection()
         {
-            var model = db.Sections.OrderBy(x => x.Name);
+            var model = db.Sections.Where(x => x.IsRemove != true).OrderBy(x => x.Name);
             return PartialView("_TableSection", model);
 
             //var model = db.Sections.OrderBy(x => x.Name).Where(x => x.IsRemove != true);

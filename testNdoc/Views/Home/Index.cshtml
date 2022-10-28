@@ -70,7 +70,7 @@
 
     function GetLastDocuments() {
         $.ajax({
-            url: "Home/TableDocument",
+            url: "Home/GetLastDocuments",
             method: "get",
             success: function (data) {
                 $(".section__documents-list").html(data);
@@ -79,7 +79,7 @@
     }
 
     function Search() {
-        let searchValue = document.querySelector(".search__input").value;
+        let searchValue = document.querySelector(".search__input").value.trim();
         $(".breadcrumbs").addClass("show");
         $(".breadcrumbs__item:last-child").text("Результаты поиска")
             $.ajax({

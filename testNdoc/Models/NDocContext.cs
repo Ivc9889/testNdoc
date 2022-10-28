@@ -33,7 +33,7 @@ namespace testNdoc
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=Demo;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=LastDatabase;Trusted_Connection=True;");
             }
         }
 

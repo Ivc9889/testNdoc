@@ -18,4 +18,13 @@
         document.body.classList.remove("no-scroll")
         popup.classList.remove("open")
     })
+
+
+    let searchInput = document.querySelector(".search__input");
+    searchInput.addEventListener("keypress", function (e) {
+        if (e.key == "Enter" && this.value != "") {
+            e.preventDefault();
+            document.querySelector(".search__btn").click();
+        }
+    })
 })

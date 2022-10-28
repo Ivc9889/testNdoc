@@ -30,11 +30,11 @@ namespace testNdoc.Controllers
             return View(await db.Sections.Where(x => x.IsRemove != true).ToListAsync());
         }
 
-        public IActionResult TableDocument()
+        public IActionResult GetLastDocuments()
         {
 
-            var model = db.Documents.ToList().Take(8).OrderByDescending(x => x.Id);
-            return PartialView(model);
+            var model = db.Documents.Where(x => x.IsRemove != true).ToList().Take(8).OrderByDescending(x => x.Id);
+            return PartialView("TableDocument", model);
         }
 
         public IActionResult TableDocument(int id)
@@ -42,17 +42,7 @@ namespace testNdoc.Controllers
 
             var model = db.Documents.Where(d => d.SectionId == id).OrderByDescending(x => x.Id); 
             return PartialView(model);
-        }
-        //public IActionResult TableDocument()
-        //{
-
-        //    var model = db.Documents.Take(8).ToList();
-
-        //    return PartialView(model);
-        //}
-
-       
-
+        }   
 
         public async Task <IActionResult> Search(string name)
         {

@@ -326,6 +326,10 @@ main {
     visibility: visible;
 }
 
+.section__documents {
+    width: 100%;
+}
+
 .section__documents-title {
     font-weight: 500;
     font-size: 20px;
@@ -531,6 +535,10 @@ main {
         height: 68px;
     }
 
+    .section__documents-title {
+        font-size: 16px;
+    }
+
     .header__top-wrapper p:first-child {
         font-size: 14px;
     }
@@ -590,4 +598,11 @@ main {
     .section__documents-title {
         margin-bottom: 12px;
     }
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
 }
