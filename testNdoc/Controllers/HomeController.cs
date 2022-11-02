@@ -26,13 +26,11 @@ namespace testNdoc.Controllers
 
         public async Task<IActionResult> Index()
         {
-
             return View(await db.Sections.Where(x => x.IsRemove != true).ToListAsync());
         }
 
         public IActionResult GetLastDocuments()
         {
-
             var model = db.Documents.Where(x => x.IsRemove != true).ToList().Take(8).OrderByDescending(x => x.Id);
             return PartialView("TableDocument", model);
         }

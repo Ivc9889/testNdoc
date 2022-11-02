@@ -41,9 +41,6 @@ namespace testNdoc.Areas.AdminControllers
 
 
         }
-
-
-
         [HttpGet]
         [ActionName("Delete")]
         public async Task<IActionResult> ConfirmDelete(int? id)
@@ -62,18 +59,31 @@ namespace testNdoc.Areas.AdminControllers
         {
             if (id != null)
             {
+                var documents = db.Documents.Where(p => p.SectionId == id);
+                if (documents.Any())
+                {
+                    foreach (var document in documents)
+                    {
+                        string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "Files");
+                        FileInfo fileInf = new FileInfo(Path.Combine(uploadsFolder, document.FileName));
+                        if (fileInf.Exists)
+                        {
+                            fileInf.Delete();
+                        }
+
+                        db.Documents.Remove(document);
+                    }
+                }
                 Section delete = await db.Sections.FirstOrDefaultAsync(p => p.Id == id);
                 if (delete != null)
                 {
-                    delete.IsRemove = true;
-                    await db.SaveChangesAsync();
-                    return RedirectToAction("Index");
+                    db.Sections.Remove(delete);       
                 }
+                await db.SaveChangesAsync();
+                return RedirectToAction("Index");
             }
             return NotFound();
         }
-
-
 
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
@@ -94,8 +104,6 @@ namespace testNdoc.Areas.AdminControllers
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
-
-
 
         public IActionResult OnPostMyUploader()
         {
@@ -127,17 +135,9 @@ namespace testNdoc.Areas.AdminControllers
                 {
                     return new ObjectResult(new { status = "fail" });
                 }
-
             }
-
             return new ObjectResult(new { status = "fail" });
-
-
-
         }
-
-        
-
 
         public IActionResult TableDocument(int id)
         {
@@ -147,10 +147,10 @@ namespace testNdoc.Areas.AdminControllers
         }
 
 
-        public IActionResult Table_site()
-        {
-            return View("Table_Site");
-        }
+        //public IActionResult Table_site()
+        //{
+        //    return View("Table_Site");
+        //}
 
 
         //public IActionResult FileAdd()
@@ -236,15 +236,15 @@ namespace testNdoc.Areas.AdminControllers
             {
                 Documents delete = await db.Documents.FirstOrDefaultAsync(p => p.Id == id);
                 if (delete != null)
-                {
-                    delete.IsRemove = true;
-
+                {                  
                     string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "Files");
                     FileInfo fileInf = new FileInfo(Path.Combine(uploadsFolder, delete.FileName));
                     if (fileInf.Exists)
                     {
                         fileInf.Delete();
                     }
+
+                    db.Documents.Remove(delete);
 
                     await db.SaveChangesAsync();
                     return RedirectToAction("Index");
@@ -253,16 +253,14 @@ namespace testNdoc.Areas.AdminControllers
             return NotFound();
         }
 
-
-
         [HttpGet]
         public async Task<IActionResult> EditDocument(int? id)
         {
             if (id != null)
             {
-                Documents name = await db.Documents.FirstOrDefaultAsync(p => p.Id == id);
-                if (name != null)
-                    return View(name);
+                Documents editDocument = await db.Documents.FirstOrDefaultAsync(p => p.Id == id);
+                if (editDocument != null)
+                    return View(editDocument);
             }
             return NotFound();
         }
@@ -292,14 +290,7 @@ namespace testNdoc.Areas.AdminControllers
             }
             updateDoc.Name = Name;
             db.SaveChanges();
-            return RedirectToAction("Сreate", "Admin");
-        }
-
-
-
-        public async Task<IActionResult> DocIndex()
-        {
-            return View(await db.Documents.ToListAsync());
+            return RedirectToAction("Create");
         }
 
         public ActionResult CreateDocument(int sectionId)
@@ -314,8 +305,6 @@ namespace testNdoc.Areas.AdminControllers
             db.Documents.Add(document);
             db.SaveChanges();
             return RedirectToAction("Create");
-
-
         }
 
         [HttpGet]
@@ -326,12 +315,6 @@ namespace testNdoc.Areas.AdminControllers
 
         }
 
-        // GET: AdminController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
         // GET: AdminController/Create
 
 
@@ -340,14 +323,10 @@ namespace testNdoc.Areas.AdminControllers
             return View(await db.Sections.Where(x => x.IsRemove != true).ToListAsync());
 
         }
-
         public IActionResult Create()
         {
             return View("Create");
         }
-
-
-
 
         [HttpPost]
         public ActionResult Create(Section section)
@@ -369,10 +348,12 @@ namespace testNdoc.Areas.AdminControllers
 
         }
 
-
-
-
-
-
+        [HttpPost]
+        public IActionResult Logout()
+		{
+            //return RedirectToPage("/Identity/Pages/Account/Login");
+            //return RedirectToPage("https://localhost:44372/Identity/Account/Login?ReturnUrl=%2FAdmin")
+            return RedirectToAction("Register", "Account");
+		}
     }
 }

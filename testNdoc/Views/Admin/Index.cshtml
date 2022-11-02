@@ -21,6 +21,11 @@
             </td></tr>
         }
     </table>
+    <a asp-area="Identity" class="btn-outline-primary btn mb-3" asp-page="/Account/Register">Зарегистрировать нового пользователя</a>
+    <form method="post" asp-area="Identity" asp-page="/Account/Login" asp-page-handler="Logout">
+		<input type="submit" class="btn-outline-primary btn mb-3" value="Выйти из админки" />
+	</form>
+    
 
 
 

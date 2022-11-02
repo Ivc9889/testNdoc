@@ -6,43 +6,44 @@
 @{
 	ViewBag.Title = "Редактирование документа";
 }
-<form>
-	<input type="hidden" id="DocId" value="@Model.Id" />
+<form asp-action="EditDocument" enctype="multipart/form-data">
+	<input type="hidden" name="Id" value="@Model.Id" />
 	<div class="form-group">
-		<label for="DocName" class="control-label">Название</label>
-		<input type="text" id="DocName" class="form-control" value="@Model.Name" />
+		<label asp-for="Name" class="control-label">Название</label>
+		<input type="text" name="Name" class="form-control" value="@Model.Name" />
 	</div>
 	<div class="form-group">
 		<div class="custom-file">
-			<input type="file" id="fileUpload" class="fileUpload">
-			<button id="btnUpload" type="submit" onclick="EditDocument()" class="btn  btn-success">Загрузить</button>
+			<input type="file" name="MyUploader" class="fileUpload">
+			<button id="btnUpload" type="submit" class="btn  btn-success">Загрузить</button>
 		</div>
 	</div>
 </form>
+<a asp-action="Create" class="btn btn-outline-secondary">Назад</a>
 
 @section Scripts
 {
     <script>
-		function EditDocument() {        
-            var files = $('#fileUpload').prop("files");
-            var url = "/Admin/EditDocument";
-            formData = new FormData();
-            formData.append("Id", $("#DocId").val());
-            formData.append("Name", $("#DocName").val());
-            formData.append("MyUploader", files[0]);
+		//function EditDocument() {        
+  //          var files = $('#fileUpload').prop("files");
+  //          var url = "/Admin/EditDocument";
+  //          formData = new FormData();
+  //          formData.append("Id", $("#DocId").val());
+  //          formData.append("Name", $("#DocName").val());
+  //          formData.append("MyUploader", files[0]);
 
-            jQuery.ajax({
-                type: 'POST',
-                url: url,
-                data: formData,
-                processData: false,
-                contentType: false,
-                beforeSend: function (xhr) {                    
-                    xhr.setRequestHeader("XSRF-TOKEN",
-                        $('input:hidden[name="__RequestVerificationToken"]').val());
-                }
+  //          jQuery.ajax({
+  //              type: 'POST',
+  //              url: url,
+  //              data: formData,
+  //              processData: false,
+  //              contentType: false,
+  //              beforeSend: function (xhr) {                    
+  //                  xhr.setRequestHeader("XSRF-TOKEN",
+  //                      $('input:hidden[name="__RequestVerificationToken"]').val());
+  //              }
 				
-            });
-        } 
+  //          });
+  //      } 
     </script>
 }
