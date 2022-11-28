@@ -26,7 +26,7 @@ namespace testNdoc.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await db.Sections.Where(x => x.IsRemove != true).ToListAsync());
+            return View(await db.Sections.Where(x => x.IdParent == 0).ToListAsync());
         }
 
         public IActionResult GetLastDocuments()
@@ -38,7 +38,8 @@ namespace testNdoc.Controllers
         public IActionResult TableDocument(int id)
         {
 
-            var model = db.Documents.Where(d => d.SectionId == id).OrderByDescending(x => x.Id); 
+            var model = db.Documents.Where(d => d.SectionId == id).OrderByDescending(x => x.Id);
+            ViewBag.Sections = db.Sections.Where(x => x.IdParent == id);
             return PartialView(model);
         }   
 

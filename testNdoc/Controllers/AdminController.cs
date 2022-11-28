@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -119,14 +120,15 @@ namespace testNdoc.Areas.AdminControllers
             {
                 try
                 {
-                    string fileName = Guid.NewGuid() + Path.GetExtension(MyUploader.FileName);
+                    //string fileName = Guid.NewGuid() + Path.GetExtension(MyUploader.FileName);
+                    string fileName = MyUploader.FileName;
                     string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "Files");
                     string filePath = Path.Combine(uploadsFolder, fileName);
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
                         MyUploader.CopyTo(fileStream);
                     }
-                    Documents document = new Documents() { Name = Name, SectionId = SectionId, FileName = fileName, DateAdd = DateTime.Now };
+                    Documents document = new Documents() { Name = Name, SectionId = SectionId, FileName = fileName, DateAdd = DateTime.Now, Year = DateTime.Now.Year };
                     db.Add(document);
                     db.SaveChanges();
                     return new ObjectResult(new { status = "success" });
@@ -273,7 +275,8 @@ namespace testNdoc.Areas.AdminControllers
             Documents updateDoc = db.Documents.Find(Id);
             if (MyUploader != null)
             {
-                string fileName = Guid.NewGuid() + Path.GetExtension(MyUploader.FileName);
+                //string fileName = Guid.NewGuid() + Path.GetExtension(MyUploader.FileName);
+                string fileName = MyUploader.FileName;
                 string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "Files");
                 string filePath = Path.Combine(uploadsFolder, fileName);
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
@@ -325,12 +328,18 @@ namespace testNdoc.Areas.AdminControllers
         }
         public IActionResult Create()
         {
+            ViewBag.Sections = new SelectList(db.Sections.ToList(), "SectionId", "Name");
             return View("Create");
         }
 
         [HttpPost]
         public ActionResult Create(Section section)
         {
+            if (section.IdParent == null)
+            {
+                section.IdParent = 0;
+            }
+            section.SectionId = section.Id;
             db.Sections.Add(section);
             db.SaveChanges();
 

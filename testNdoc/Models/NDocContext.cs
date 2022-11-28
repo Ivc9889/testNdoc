@@ -34,7 +34,7 @@ namespace testNdoc
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=Ndoc;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server = 192.168.116.233; Database = Ndoc; User ID = sa; Password = @sql2016");
             }
         }
 
@@ -146,6 +146,8 @@ namespace testNdoc
                 entity.Property(e => e.DateAdd)
                     .HasColumnName("DateAdd");
 
+                entity.Property(e => e.Year)
+                   .HasColumnName("Year");
                 entity.Property(e => e.FileName)
                     .HasMaxLength(200)
                     .HasColumnName("FIleName");
@@ -161,6 +163,8 @@ namespace testNdoc
                 entity.ToTable("Section");
 
                 entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.SectionId).HasColumnName("SectionId");
+                entity.Property(e => e.IdParent).HasColumnName("idParent");
 
                 entity.Property(e => e.Name).HasMaxLength(200);
             });

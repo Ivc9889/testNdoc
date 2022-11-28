@@ -16,15 +16,18 @@
 	<div class="col-4" style="border-right: 1px solid #dcdcdc;">
 		<a asp-action="Index" class="btn btn-outline-secondary">Назад</a>
 		<h6>Добавить компонент</h6>
-
-		<form method="post">
-
-
-			<label asp-for="Name">Имя</label><br />
-			<input type="text" asp-for="Name" />
-			<input type="button" onclick="CreateSection()" value="Добавить" />
-
-
+		<form method="post" class="form-horizontal" role="form">
+			<div class="form-group mb-2">
+				<label asp-for="Name">Имя</label><br />
+				<input type="text" asp-for="Name" />      
+			</div> 
+			<div class="form-group mb-2">
+				<label for="IdParent">Родительская категория</label>
+				<select id="IdParent" name="IdParent" class="form-select" asp-items="ViewBag.Sections"></select>      
+			</div> 
+			<div class="form-group">
+				<input type="button" onclick="CreateSection()" value="Добавить" />
+			</div>
 		</form>
 
 
@@ -49,7 +52,7 @@
 	   {
 			$.ajax({
 				url: "Create",
-				data:{"Name" : $("#Name").val()},
+				data:{"Name" : $("#Name").val(), "IdParent": $("select option:selected").val() },
 				method: "post",
 				success: function (data) {
 					$("#TableSectionsContainer").html(data);

@@ -9,7 +9,7 @@
             <ul data-da=".popup-section .popup__inner, 768, last" class="categories section__categories-list">
                 @foreach (var item in Model)
                 {
-                    <li asp-action="TableDocument" data-id=@item.Id class="category section__categories-item">
+                    <li asp-action="TableDocument" data-parent="true" data-id="@item.SectionId" class="category section__categories-item">
                        <p class="category__text">
                           @Html.DisplayFor(modelItem => item.Name)
                        </p>
@@ -45,7 +45,8 @@
           $(".category").on("click", function(e) {
               let categoryId = +$(this).attr("data-id");
               let categoryName = $(this).children().text().trim();
-              GetDocuments(categoryId, categoryName)
+              let isParent = $(this).attr("data-parent") == "true" ? true : false;
+              GetDocuments(categoryId, categoryName, isParent)
 
             //console.log($(".section__documents-title").text().trim())
             //$(".section__documents-title").text(nameCategory)
@@ -54,8 +55,13 @@
 
         //$(".search__btn").on("click", Search())
      })
-     function GetDocuments(id, categoryName) {
-        $(".breadcrumbs__item:last-child").text(categoryName)
+     function GetDocuments(id, categoryName, isParent) {
+        if (parent) {
+            $(".breadcrumbs__item:last-child").text(categoryName)
+        } else {
+            console.log("нера")
+            $(".breadcrumbs__list").add(".breadcrumbs__list", `<li class="breadcrumbs__item">${categoryName}</li>`)
+        }
         $(".breadcrumbs").addClass("show");
         $.ajax({
             url: "Home/TableDocument",

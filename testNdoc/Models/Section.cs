@@ -12,7 +12,9 @@ namespace testNdoc
         }
 
         public int Id { get; set; }
+        public int? SectionId { get; set; }
         public string Name { get; set; }
+        public int? IdParent { get; set; }
         public bool? IsRemove { get; set; }
 
         public virtual ICollection<Documents> Documents { get; set; }

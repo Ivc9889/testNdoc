@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migration\**" />
+    <Content Remove="Migration\**" />
+    <EmbeddedResource Remove="Migration\**" />
+    <None Remove="Migration\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="wwwroot\fonts\Geometria-Bold.woff" />
     <None Remove="wwwroot\fonts\Geometria-Bold.woff2" />
     <None Remove="wwwroot\fonts\Geometria-Medium.woff" />
@@ -34,7 +41,6 @@
   <ItemGroup>
     <Folder Include="wwwroot\Files\" />
     <Folder Include="wwwroot\mediaUpload\" />
-    <Folder Include="Migration\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

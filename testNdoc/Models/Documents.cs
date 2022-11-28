@@ -13,9 +13,10 @@ namespace testNdoc
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public int SectionId { get; set; }
+        public int? SectionId { get; set; }
         public string Name { get; set; }
         public string FileName { get; set; }
+        public int Year { get; set; }
         public bool? IsRemove { get; set; }
         public DateTime? DateAdd { get; set; }  
 

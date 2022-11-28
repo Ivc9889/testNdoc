@@ -11,10 +11,21 @@
     {
         <li class="section__documents-item section-item">
             <a href="~/Files/@item.FileName" target="_blank" class="section-item__body">
-                <small class="section-item__time">@item.DateAdd?.ToString("dd.MM.yyyy")</small>
+                <small class="section-item__time">@item.Year</small>
                 <p class="section-item__text">@item.Name</p>
             </a>
         </li>
+    }
+    @if (ViewBag.Sections != null)
+    {
+        @foreach (var item in ViewBag.Sections)
+        {
+            <li asp-action="TableDocument" data-parent="false" data-id="@item.SectionId" class="category section__categories-item">
+                <p class="category__text">
+                    @item.Name
+                </p>
+            </li>
+        }
     }
 }
 else

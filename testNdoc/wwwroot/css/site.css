@@ -275,11 +275,12 @@ main {
     }
 
 .section__categories-list {
+    width: 283px;
     margin-right: 75px;
 }
 
 .category {
-    width: 283px;
+    width: 100%;
     display: block;
     padding: 20px 16px;
     color: #222;
@@ -303,7 +304,7 @@ main {
     }
 
 .category__text {
-    max-width: 212px;
+/*    max-width: 212px;*/
     margin-right: 19px;
 }
 
